@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(Allocator)
+project(Allocator VERSION 0.0.$ENV{TRAVIS_BUILD_NUMBER})
 
 configure_file(before_deploy.sh.in before_deploy.sh COPYONLY)
 
