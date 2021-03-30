@@ -1,0 +1,11 @@
+#!/bin/bash
+
+cat > pkg_create.json << EOF
+{
+  "name": "${AK_CUR_REPO_NAME}",
+  "licenses": ["GPL-3.0-or-later"],
+  "vcs_url": "-",
+}
+EOF
+
+curl -ualex-stch:$BINTRAY_API_KEY --header "Content-Type: application/json" --data @pkg_create.json https://api.bintray.com/packages/alex-stch/otuscpp

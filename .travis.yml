@@ -1,0 +1,20 @@
+language: cpp
+compiler: gcc
+os: linux
+dist: focal
+before_script:
+- "echo \"AK: Current distro ${TRAVIS_DIST}\""
+- "echo \"AK: Current compiler ${TRAVIS_COMPILER}\"" 
+- "export AK_CUR_REPO_NAME=`echo ${TRAVIS_REPO_SLUG}|awk -F/ '{print $2;}'`"
+script:
+- cmake . -DAK_DEB_PKG_NAME=${AK_CUR_REPO_NAME}
+- cmake --build .
+- cmake --build . --target package
+before_deploy:
+- "chmod +x before_deploy.sh"
+- ./before_deploy.sh
+deploy:
+   provider: script
+   skip_cleanup: true
+   script:
+   - curl -T ${AK_CUR_REPO_NAME}-0.0.${TRAVIS_BUILD_NUMBER}-Linux.deb -ualex-stch:$BINTRAY_API_KEY "https://api.bintray.com/content/alex-stch/otuscpp/${AK_CUR_REPO_NAME}/${TRAVIS_BUILD_NUMBER}/${AK_CUR_REPO_NAME}-0.0.${TRAVIS_BUILD_NUMBER}-Linux.deb;deb_distribution=${TRAVIS_DIST};deb_component=main;deb_architecture=amd64;publish=1"
