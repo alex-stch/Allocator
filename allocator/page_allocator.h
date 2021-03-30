@@ -14,34 +14,6 @@ namespace ak_allocator {
 
 namespace __detail {
 
-/**
- * NOTE: Bit array index
- *
- * One bit is for one element (object of the type _Tp):
- * so it will occupy one and more bytes.
- *
- * Search granularity in the bit-array index can be:
- * int, long, long long (for my linux 32, 64 and 64 bits).
- * So we can search/check 32 or 64 elements at same time.
- *
- *
- * uint32_t i = 0x01234567;
- * Memory representation:
- * LE: 67 45 23 01
- * BE: 01 23 45 67  (this way humans write numbers)
- * https://www.geeksforgeeks.org/little-and-big-endian-mystery/
- *
- * The value uint32_t(0x01020304): 00000001 00000010 00000011 00000100'
- * In memory (hex):  04 03 02 01   (that is: 00000100 00000011 00000010 00000001)
- *
- * In little endian machines, last byte (most significant) of binary
- * representation of the multibyte data-type (int, float, etc) is
- * stored first.
- * In big endian machines, first byte of binary representation of
- * the multibyte data-type is stored first.
- *
- */
-
 template <typename _Tp, typename Logger>
 struct mem_pool {
   using elem_type = typename std::aligned_storage<sizeof(_Tp), alignof(_Tp)>::type;
@@ -146,7 +118,7 @@ struct mem_pool {
   std::size_t free_slots_left{0};
 
   // Default size of the usable for allocation area of the pool's memory (1 MB = 256 pages per 4096 bytes, just to be)
-  const std::size_t allocate_pgs{10}; /* { 256 }; */
+  const std::size_t allocate_pgs{256};
 
   // System page size
   int pagesize{0};
